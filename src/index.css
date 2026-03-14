@@ -507,7 +507,7 @@ textarea {
   left: 5%;
   width: 62px;
   animation-duration: 14s;
-  animation-delay: 0s;
+  animation-delay: 5s;
 }
 
 .photo-2 {
@@ -521,7 +521,7 @@ textarea {
   left: 17%;
   width: 86px;
   animation-duration: 16s;
-  animation-delay: 5s;
+  animation-delay: 0s;
 }
 
 .photo-4 {
@@ -535,14 +535,14 @@ textarea {
   right: 10%;
   width: 62px;
   animation-duration: 19s;
-  animation-delay: 4s;
+  animation-delay: 7s;
 }
 
 .photo-6 {
   right: 17%;
   width: 88px;
   animation-duration: 17s;
-  animation-delay: 7s;
+  animation-delay: 4s;
 }
 
 @keyframes floatPhoto {
