@@ -14,8 +14,8 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
-  User,
 } from "firebase/auth";
+import type { User } from "firebase/auth";
 import { auth, db, provider } from "./firebase/config";
 
 type GiftItem = {
