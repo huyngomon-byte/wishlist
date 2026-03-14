@@ -612,3 +612,52 @@ textarea {
   }
 
 }
+.auth-bar {
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+
+.auth-box {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.auth-btn {
+  border: 1px solid rgba(255, 170, 200, 0.25);
+  background: rgba(255, 120, 170, 0.12);
+  color: #ffd3e3;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.auth-btn:hover {
+  background: rgba(255, 120, 170, 0.18);
+}
+
+.view-only-note {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.input:disabled,
+.textarea:disabled,
+.priority:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
