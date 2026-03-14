@@ -544,7 +544,7 @@ textarea {
 
 .photo-3 {
   left: 17%;
-  width: 66px;
+  width: 86px;
   animation-duration: 16s;
   animation-delay: 5s;
 }
@@ -565,7 +565,7 @@ textarea {
 
 .photo-6 {
   right: 17%;
-  width: 68px;
+  width: 88px;
   animation-duration: 17s;
   animation-delay: 7s;
 }
@@ -588,4 +588,52 @@ textarea {
     transform: translateY(-115vh) rotate(-8deg) scale(1.05);
     opacity: 0;
   }
+}
+.floating-hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.floating-hearts span {
+  position: absolute;
+  bottom: -40px;
+  font-size: 20px;
+  opacity: 0.8;
+  animation: floatHeart linear infinite;
+}
+
+/* vị trí tim */
+.floating-hearts span:nth-child(1){ left:5%; animation-duration:12s;}
+.floating-hearts span:nth-child(2){ left:15%; animation-duration:16s;}
+.floating-hearts span:nth-child(3){ left:30%; animation-duration:14s;}
+.floating-hearts span:nth-child(4){ left:45%; animation-duration:18s;}
+.floating-hearts span:nth-child(5){ left:60%; animation-duration:15s;}
+.floating-hearts span:nth-child(6){ left:75%; animation-duration:17s;}
+.floating-hearts span:nth-child(7){ left:85%; animation-duration:13s;}
+.floating-hearts span:nth-child(8){ left:25%; animation-duration:19s;}
+.floating-hearts span:nth-child(9){ left:55%; animation-duration:20s;}
+
+@keyframes floatHeart {
+
+  0%{
+    transform:translateY(0) scale(0.8);
+    opacity:0;
+  }
+
+  10%{
+    opacity:1;
+  }
+
+  50%{
+    transform:translateY(-50vh) scale(1);
+  }
+
+  100%{
+    transform:translateY(-110vh) scale(1.2);
+    opacity:0;
+  }
+
 }

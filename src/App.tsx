@@ -121,7 +121,20 @@ export default function App() {
   };
 
   return (
-   <div className="app">
+  <div className="app">
+
+    <div className="floating-hearts">
+      <span>💖</span>
+      <span>💕</span>
+      <span>💗</span>
+      <span>💞</span>
+      <span>💘</span>
+      <span>💓</span>
+      <span>💖</span>
+      <span>💕</span>
+      <span>💗</span>
+    </div>
+
     <div className="floating-photos">
       <img src="/anh-1.png" className="photo photo-1" alt="" />
       <img src="/anh-2.png" className="photo photo-2" alt="" />
