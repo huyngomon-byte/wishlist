@@ -501,31 +501,6 @@ textarea {
   animation-iteration-count: infinite;
 }
 
-.photo::after {
-  content: "💖";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 14px;
-  animation: heartTrail 2s infinite;
-}
-
-@keyframes heartTrail {
-  0% {
-    transform: translate(-50%,0);
-    opacity: 0;
-  }
-  50% {
-    transform: translate(-50%,-10px);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%,-20px);
-    opacity: 0;
-  }
-}
-
 /* từng ảnh một */
 
 .photo-1 {
