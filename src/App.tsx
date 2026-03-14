@@ -123,12 +123,12 @@ export default function App() {
   return (
    <div className="app">
     <div className="floating-photos">
-      <img src="/anh-1.jpg" className="photo photo-1" alt="" />
-      <img src="/anh-2.jpg" className="photo photo-2" alt="" />
-      <img src="/anh-3.jpg" className="photo photo-3" alt="" />
-      <img src="/anh-1.jpg" className="photo photo-4" alt="" />
-      <img src="/anh-2.jpg" className="photo photo-5" alt="" />
-      <img src="/anh-3.jpg" className="photo photo-6" alt="" />
+      <img src="/anh-1.png" className="photo photo-1" alt="" />
+      <img src="/anh-2.png" className="photo photo-2" alt="" />
+      <img src="/anh-3.png" className="photo photo-3" alt="" />
+      <img src="/anh-1.png" className="photo photo-4" alt="" />
+      <img src="/anh-2.png" className="photo photo-5" alt="" />
+      <img src="/anh-3.png" className="photo photo-6" alt="" />
     </div>
 
     <div className="bg-glow bg-glow-1"></div>
