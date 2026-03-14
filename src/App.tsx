@@ -29,6 +29,28 @@ export default function App() {
   const [priority, setPriority] = useState<"uoc" | "thich" | "muon">("muon");
   const [tab, setTab] = useState<"form" | "list">("form");
 
+  const parsePrice = (value: string) => {
+    if (!value) return 0;
+
+    const text = value.toLowerCase().trim().replace(/\s/g, "").replace(/,/g, ".");
+
+    if (text.includes("tr")) {
+      return parseFloat(text.replace("tr", "")) * 1000000;
+    }
+
+    if (text.includes("k")) {
+      return parseFloat(text.replace("k", "")) * 1000;
+    }
+
+    return Number(text.replace(/\./g, ""));
+  };
+
+  const formatPrice = (value: string) => {
+    const parsed = parsePrice(value);
+    if (!parsed) return "";
+    return parsed.toLocaleString("vi-VN") + "₫";
+  };
+
   useEffect(() => {
     const q = query(collection(db, "gifts"), orderBy("createdAt", "desc"));
 
@@ -97,7 +119,7 @@ export default function App() {
         <div className="header-card">
           <div className="rose">🌹</div>
           <div>
-            <h1 className="title">Danh Sách Ước Mơ của Trang Ỉn🤍</h1>
+            <h1 className="title">Danh Sách Ước Mơ của Trang Ỉn 🤍</h1>
             <p className="subtitle">Những điều bé iu thích, anh lưu hết ở đây 💖</p>
           </div>
         </div>
@@ -140,7 +162,8 @@ export default function App() {
               <label className="label">₫ GIÁ ƯỚC TÍNH (VNĐ)</label>
               <input
                 className="input"
-                placeholder="Ví dụ: 500,000"
+                placeholder="Ví dụ: 500k, 1tr, 2.5tr hoặc 500000"
+                inputMode="numeric"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
@@ -213,7 +236,7 @@ export default function App() {
 
                     {gift.price && (
                       <p className="gift-line">
-                        <strong>Giá dự tính:</strong> {gift.price} đ
+                        <strong>Giá dự tính:</strong> {formatPrice(gift.price)}
                       </p>
                     )}
 
