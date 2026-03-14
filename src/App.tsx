@@ -122,6 +122,14 @@ export default function App() {
 
   return (
     <div className="app">
+  <div className="floating-hearts">
+    <span>❤️</span>
+    <span>💗</span>
+    <span>💖</span>
+    <span>💕</span>
+    <span>💘</span>
+    <span>💝</span>
+  </div>
       <div className="bg-glow bg-glow-1"></div>
       <div className="bg-glow bg-glow-2"></div>
 
