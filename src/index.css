@@ -495,7 +495,7 @@ textarea {
   bottom: -120px;
   border-radius: 18px;
   object-fit: cover;
-  opacity: 0.45;
+  opacity: 0.78;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.16);
   animation-name: floatPhoto;
@@ -507,14 +507,14 @@ textarea {
 
 .photo-1 {
   left: 3%;
-  width: 42px;
+  width: 52px;
   animation-duration: 14s;
   animation-delay: 0s;
 }
 
 .photo-2 {
   left: 10%;
-  width: 48px;
+  width: 64px;
   animation-duration: 18s;
   animation-delay: 2s;
 }
@@ -535,7 +535,7 @@ textarea {
 
 .photo-5 {
   right: 10%;
-  width: 42px;
+  width: 52px;
   animation-duration: 19s;
   animation-delay: 4s;
 }
