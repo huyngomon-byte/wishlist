@@ -495,54 +495,77 @@ textarea {
   bottom: -120px;
   border-radius: 18px;
   object-fit: cover;
-  opacity: 0.78;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  opacity: 0.55;
   animation-name: floatPhoto;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
+.photo::after {
+  content: "💖";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  animation: heartTrail 2s infinite;
+}
+
+@keyframes heartTrail {
+  0% {
+    transform: translate(-50%,0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%,-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%,-20px);
+    opacity: 0;
+  }
+}
+
 /* từng ảnh một */
 
 .photo-1 {
-  left: 3%;
-  width: 52px;
+  left: 5%;
+  width: 62px;
   animation-duration: 14s;
   animation-delay: 0s;
 }
 
 .photo-2 {
   left: 10%;
-  width: 64px;
+  width: 74px;
   animation-duration: 18s;
   animation-delay: 2s;
 }
 
 .photo-3 {
   left: 17%;
-  width: 56px;
+  width: 66px;
   animation-duration: 16s;
   animation-delay: 5s;
 }
 
 .photo-4 {
-  right: 3%;
-  width: 54px;
+  right: 5%;
+  width: 64px;
   animation-duration: 15s;
   animation-delay: 1s;
 }
 
 .photo-5 {
   right: 10%;
-  width: 52px;
+  width: 62px;
   animation-duration: 19s;
   animation-delay: 4s;
 }
 
 .photo-6 {
   right: 17%;
-  width: 58px;
+  width: 68px;
   animation-duration: 17s;
   animation-delay: 7s;
 }
@@ -565,13 +588,4 @@ textarea {
     transform: translateY(-115vh) rotate(-8deg) scale(1.05);
     opacity: 0;
   }
-}
-.photo::after {
-  content: "💖";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 14px;
-  opacity: 0.7;
 }
