@@ -324,3 +324,40 @@ textarea {
 .delete-btn:hover {
   background: rgba(255, 80, 120, 0.14);
 }
+.gift-card-bought {
+  border: 1px solid rgba(120, 255, 170, 0.22);
+  box-shadow: 0 0 24px rgba(120, 255, 170, 0.08);
+}
+
+.bought-text {
+  margin: 14px 0 0;
+  color: #9df3ba;
+  font-weight: 600;
+}
+
+.gift-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.bought-btn {
+  border: 1px solid rgba(120, 255, 170, 0.24);
+  background: rgba(120, 255, 170, 0.08);
+  color: #b5ffd0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.bought-btn:hover {
+  background: rgba(120, 255, 170, 0.14);
+}
+
+.bought-btn-active {
+  background: rgba(120, 255, 170, 0.18);
+  color: #d8ffe7;
+}

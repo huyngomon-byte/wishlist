@@ -8,6 +8,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase/config";
 
@@ -17,6 +18,7 @@ type GiftItem = {
   price: string;
   note: string;
   link: string;
+  bought?: boolean;
   priority: "uoc" | "thich" | "muon";
 };
 
@@ -32,22 +34,22 @@ export default function App() {
   const parsePrice = (value: string) => {
     if (!value) return 0;
 
-    const text = value.toLowerCase().trim().replace(/\s/g, "").replace(/,/g, ".");
+    const text = value.toLowerCase().trim().replace(/\s/g, "");
 
     if (text.includes("tr")) {
-      return parseFloat(text.replace("tr", "")) * 1000000;
+      return parseFloat(text.replace("tr", "").replace(",", ".")) * 1000000;
     }
 
     if (text.includes("k")) {
-      return parseFloat(text.replace("k", "")) * 1000;
+      return parseFloat(text.replace("k", "").replace(",", ".")) * 1000;
     }
 
-    return Number(text.replace(/\./g, ""));
+    return Number(text.replace(/[^\d]/g, ""));
   };
 
   const formatPrice = (value: string) => {
     const parsed = parsePrice(value);
-    if (!parsed) return "";
+    if (!parsed) return value;
     return parsed.toLocaleString("vi-VN") + "₫";
   };
 
@@ -78,6 +80,7 @@ export default function App() {
       note,
       link,
       priority,
+      bought: false,
       createdAt: serverTimestamp(),
     });
 
@@ -96,6 +99,13 @@ export default function App() {
     if (!ok) return;
 
     await deleteDoc(doc(db, "gifts", id));
+  };
+
+  const toggleBought = async (id?: string, currentBought?: boolean) => {
+    if (!id) return;
+    await updateDoc(doc(db, "gifts", id), {
+      bought: !currentBought,
+    });
   };
 
   const getPriorityText = (value: GiftItem["priority"]) => {
@@ -228,11 +238,18 @@ export default function App() {
                 <div className="empty-card">Chưa có món quà nào được thêm cả 💭</div>
               ) : (
                 gifts.map((gift) => (
-                  <div className="gift-card" key={gift.id}>
+                  <div
+                    className={`gift-card ${gift.bought ? "gift-card-bought" : ""}`}
+                    key={gift.id}
+                  >
                     <div className="gift-top">
                       <h3>{gift.name}</h3>
                       <span className="badge">{getPriorityText(gift.priority)}</span>
                     </div>
+
+                    {gift.bought && (
+                      <p className="bought-text">🎁 Anh đã mua món này rồi</p>
+                    )}
 
                     {gift.price && (
                       <p className="gift-line">
@@ -256,6 +273,13 @@ export default function App() {
                     {gift.note && <p className="gift-note">{gift.note}</p>}
 
                     <div className="gift-actions">
+                      <button
+                        className={`bought-btn ${gift.bought ? "bought-btn-active" : ""}`}
+                        onClick={() => toggleBought(gift.id, gift.bought)}
+                      >
+                        {gift.bought ? "✅ Đã mua" : "🎁 Anh đã mua"}
+                      </button>
+
                       <button
                         className="delete-btn"
                         onClick={() => deleteGift(gift.id)}
