@@ -22,6 +22,9 @@ type GiftItem = {
   priority: "uoc" | "thich" | "muon";
 };
 
+const EDIT_KEY = "tranginyeuhuy";
+const STORAGE_KEY = "wishlist-editor-unlocked";
+
 export default function App() {
   const [gifts, setGifts] = useState<GiftItem[]>([]);
   const [name, setName] = useState("");
@@ -30,6 +33,41 @@ export default function App() {
   const [link, setLink] = useState("");
   const [priority, setPriority] = useState<"uoc" | "thich" | "muon">("muon");
   const [tab, setTab] = useState<"form" | "list">("form");
+
+  const [editKey, setEditKey] = useState("");
+  const [isEditor, setIsEditor] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === "true") {
+      setIsEditor(true);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const keyFromUrl = params.get("key");
+    if (keyFromUrl === EDIT_KEY) {
+      setIsEditor(true);
+      localStorage.setItem(STORAGE_KEY, "true");
+    }
+  }, []);
+
+  const unlockEditor = () => {
+    if (editKey.trim() === EDIT_KEY) {
+      setIsEditor(true);
+      localStorage.setItem(STORAGE_KEY, "true");
+      setEditKey("");
+      alert("Mở quyền chỉnh sửa thành công 💖");
+      return;
+    }
+
+    alert("Sai key rồi nha");
+  };
+
+  const lockEditor = () => {
+    setIsEditor(false);
+    localStorage.removeItem(STORAGE_KEY);
+    setEditKey("");
+  };
 
   const parsePrice = (value: string) => {
     if (!value) return 0;
@@ -69,6 +107,11 @@ export default function App() {
   }, []);
 
   const addGift = async () => {
+    if (!isEditor) {
+      alert("Cần nhập key để chỉnh sửa nha");
+      return;
+    }
+
     if (!name.trim()) {
       alert("Nhập tên quà trước nha");
       return;
@@ -93,6 +136,7 @@ export default function App() {
   };
 
   const deleteGift = async (id?: string) => {
+    if (!isEditor) return;
     if (!id) return;
 
     const ok = window.confirm("Xóa món quà này nha?");
@@ -102,7 +146,9 @@ export default function App() {
   };
 
   const toggleBought = async (id?: string, currentBought?: boolean) => {
+    if (!isEditor) return;
     if (!id) return;
+
     await updateDoc(doc(db, "gifts", id), {
       bought: !currentBought,
     });
@@ -121,31 +167,30 @@ export default function App() {
   };
 
   return (
-  <div className="app">
+    <div className="app">
+      <div className="floating-hearts">
+        <span>💖</span>
+        <span>💕</span>
+        <span>💗</span>
+        <span>💞</span>
+        <span>💘</span>
+        <span>💓</span>
+        <span>💖</span>
+        <span>💕</span>
+        <span>💗</span>
+      </div>
 
-    <div className="floating-hearts">
-      <span>💖</span>
-      <span>💕</span>
-      <span>💗</span>
-      <span>💞</span>
-      <span>💘</span>
-      <span>💓</span>
-      <span>💖</span>
-      <span>💕</span>
-      <span>💗</span>
-    </div>
+      <div className="floating-photos">
+        <img src="/anh-1.png" className="photo photo-1" alt="" />
+        <img src="/anh-2.png" className="photo photo-2" alt="" />
+        <img src="/anh-3.png" className="photo photo-3" alt="" />
+        <img src="/anh-1.png" className="photo photo-4" alt="" />
+        <img src="/anh-2.png" className="photo photo-5" alt="" />
+        <img src="/anh-3.png" className="photo photo-6" alt="" />
+      </div>
 
-    <div className="floating-photos">
-      <img src="/anh-1.png" className="photo photo-1" alt="" />
-      <img src="/anh-2.png" className="photo photo-2" alt="" />
-      <img src="/anh-3.png" className="photo photo-3" alt="" />
-      <img src="/anh-1.png" className="photo photo-4" alt="" />
-      <img src="/anh-2.png" className="photo photo-5" alt="" />
-      <img src="/anh-3.png" className="photo photo-6" alt="" />
-    </div>
-
-    <div className="bg-glow bg-glow-1"></div>
-    <div className="bg-glow bg-glow-2"></div>
+      <div className="bg-glow bg-glow-1"></div>
+      <div className="bg-glow bg-glow-2"></div>
 
       <div className="container">
         <div className="header-card">
@@ -154,6 +199,40 @@ export default function App() {
             <h1 className="title">Danh Sách Ước Mơ của Trang Ỉn 🤍</h1>
             <p className="subtitle">Những điều bé iu thích, anh lưu hết ở đây 💖</p>
           </div>
+        </div>
+
+        <div className="auth-bar">
+          {isEditor ? (
+            <div className="auth-box">
+              <span className="auth-text">🔐 Đang mở quyền chỉnh sửa</span>
+              <button className="auth-btn" onClick={lockEditor}>
+                Khóa lại
+              </button>
+            </div>
+          ) : (
+            <div className="auth-box">
+              <span className="auth-text">Nhập key để chỉnh sửa wishlist</span>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  width: "100%",
+                  flexWrap: "wrap",
+                }}
+              >
+                <input
+                  className="input"
+                  style={{ marginBottom: 0, flex: 1 }}
+                  placeholder="Nhập key chỉnh sửa..."
+                  value={editKey}
+                  onChange={(e) => setEditKey(e.target.value)}
+                />
+                <button className="auth-btn" onClick={unlockEditor}>
+                  Mở quyền
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="tabs">
@@ -189,6 +268,7 @@ export default function App() {
                 placeholder="Ví dụ: Vòng tay bạc khắc tên..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                disabled={!isEditor}
               />
 
               <label className="label">₫ GIÁ ƯỚC TÍNH (VNĐ)</label>
@@ -198,6 +278,7 @@ export default function App() {
                 inputMode="numeric"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
+                disabled={!isEditor}
               />
 
               <label className="label">🔗 LINK SẢN PHẨM (NẾU CÓ)</label>
@@ -206,6 +287,7 @@ export default function App() {
                 placeholder="Ví dụ: shopee.vn/... hoặc tiktok.com/..."
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
+                disabled={!isEditor}
               />
 
               <label className="label">ĐỘ ƯU TIÊN</label>
@@ -214,6 +296,7 @@ export default function App() {
                   type="button"
                   className={priority === "uoc" ? "priority active-soft" : "priority"}
                   onClick={() => setPriority("uoc")}
+                  disabled={!isEditor}
                 >
                   ☁️ Ước thôi
                 </button>
@@ -222,6 +305,7 @@ export default function App() {
                   type="button"
                   className={priority === "thich" ? "priority active-soft" : "priority"}
                   onClick={() => setPriority("thich")}
+                  disabled={!isEditor}
                 >
                   🌷 Thích nha
                 </button>
@@ -230,6 +314,7 @@ export default function App() {
                   type="button"
                   className={priority === "muon" ? "priority active-strong" : "priority"}
                   onClick={() => setPriority("muon")}
+                  disabled={!isEditor}
                 >
                   🥺 Muốn lắm
                 </button>
@@ -241,11 +326,18 @@ export default function App() {
                 placeholder="Ví dụ: thích kiểu tối giản, màu bạc, mua dịp sinh nhật..."
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
+                disabled={!isEditor}
               />
 
-              <button className="submit-btn" onClick={addGift}>
-                Lưu món quà 💌
-              </button>
+              {isEditor ? (
+                <button className="submit-btn" onClick={addGift}>
+                  Lưu món quà 💌
+                </button>
+              ) : (
+                <div className="view-only-note">
+                  Bạn đang ở chế độ chỉ xem 🤍
+                </div>
+              )}
             </div>
           </>
         ) : (
@@ -294,21 +386,23 @@ export default function App() {
 
                     {gift.note && <p className="gift-note">{gift.note}</p>}
 
-                    <div className="gift-actions">
-                      <button
-                        className={`bought-btn ${gift.bought ? "bought-btn-active" : ""}`}
-                        onClick={() => toggleBought(gift.id, gift.bought)}
-                      >
-                        {gift.bought ? "✅ Đã mua" : "🎁 Anh đã mua"}
-                      </button>
+                    {isEditor && (
+                      <div className="gift-actions">
+                        <button
+                          className={`bought-btn ${gift.bought ? "bought-btn-active" : ""}`}
+                          onClick={() => toggleBought(gift.id, gift.bought)}
+                        >
+                          {gift.bought ? "✅ Đã mua" : "🎁 Anh đã mua"}
+                        </button>
 
-                      <button
-                        className="delete-btn"
-                        onClick={() => deleteGift(gift.id)}
-                      >
-                        🗑 Xóa quà
-                      </button>
-                    </div>
+                        <button
+                          className="delete-btn"
+                          onClick={() => deleteGift(gift.id)}
+                        >
+                          🗑 Xóa quà
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))
               )}
