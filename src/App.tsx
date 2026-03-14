@@ -121,19 +121,22 @@ export default function App() {
   };
 
   return (
-    <div className="app">
-  <div className="floating-hearts">
-    <span>❤️</span>
-    <span>💗</span>
-    <span>💖</span>
-    <span>💕</span>
-    <span>💘</span>
-    <span>💝</span>
-  </div>
-      <div className="bg-glow bg-glow-1"></div>
-      <div className="bg-glow bg-glow-2"></div>
+  return (
+  <div className="app">
+    <div className="floating-photos">
+      <img src="/anh-1.jpg" className="photo photo-1" alt="" />
+      <img src="/anh-2.jpg" className="photo photo-2" alt="" />
+      <img src="/anh-3.jpg" className="photo photo-3" alt="" />
+      <img src="/anh-1.jpg" className="photo photo-4" alt="" />
+      <img src="/anh-2.jpg" className="photo photo-5" alt="" />
+      <img src="/anh-3.jpg" className="photo photo-6" alt="" />
+    </div>
 
-      <div className="container">
+    <div className="bg-glow bg-glow-1"></div>
+    <div className="bg-glow bg-glow-2"></div>
+
+    <div className="container">
+
         <div className="header-card">
           <div className="rose">🌹</div>
           <div>

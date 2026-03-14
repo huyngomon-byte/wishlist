@@ -482,3 +482,87 @@ textarea {
     transform: translate(-80px, -60px);
   }
 }
+.floating-photos {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.photo {
+  position: absolute;
+  bottom: -120px;
+  border-radius: 18px;
+  object-fit: cover;
+  opacity: 0.45;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  animation-name: floatPhoto;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* từng ảnh một */
+
+.photo-1 {
+  left: 3%;
+  width: 42px;
+  animation-duration: 14s;
+  animation-delay: 0s;
+}
+
+.photo-2 {
+  left: 10%;
+  width: 48px;
+  animation-duration: 18s;
+  animation-delay: 2s;
+}
+
+.photo-3 {
+  left: 17%;
+  width: 56px;
+  animation-duration: 16s;
+  animation-delay: 5s;
+}
+
+.photo-4 {
+  right: 3%;
+  width: 54px;
+  animation-duration: 15s;
+  animation-delay: 1s;
+}
+
+.photo-5 {
+  right: 10%;
+  width: 42px;
+  animation-duration: 19s;
+  animation-delay: 4s;
+}
+
+.photo-6 {
+  right: 17%;
+  width: 58px;
+  animation-duration: 17s;
+  animation-delay: 7s;
+}
+
+@keyframes floatPhoto {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(0.95);
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 0.82;
+  }
+
+  50% {
+    transform: translateY(-50vh) rotate(8deg) scale(1);
+  }
+
+  100% {
+    transform: translateY(-115vh) rotate(-8deg) scale(1.05);
+    opacity: 0;
+  }
+}
