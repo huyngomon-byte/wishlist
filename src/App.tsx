@@ -121,8 +121,7 @@ export default function App() {
   };
 
   return (
-  return (
-  <div className="app">
+   <div className="app">
     <div className="floating-photos">
       <img src="/anh-1.jpg" className="photo photo-1" alt="" />
       <img src="/anh-2.jpg" className="photo photo-2" alt="" />
@@ -135,8 +134,7 @@ export default function App() {
     <div className="bg-glow bg-glow-1"></div>
     <div className="bg-glow bg-glow-2"></div>
 
-    <div className="container">
-
+      <div className="container">
         <div className="header-card">
           <div className="rose">🌹</div>
           <div>
