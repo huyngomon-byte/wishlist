@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { ChangeEvent } from "react";
+import type { CSSProperties, ChangeEvent } from "react";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import EditorAccessCard from "../components/EditorAccessCard";
 import {
@@ -16,6 +16,13 @@ type HomePageProps = {
   onEditKeyChange: (value: string) => void;
   onUnlock: () => void;
   onLock: () => void;
+};
+
+type HeartBurst = {
+  id: number;
+  x: number;
+  delay: number;
+  scale: number;
 };
 
 const DEFAULT_AVATARS = {
@@ -73,6 +80,7 @@ export default function HomePage({
   const [trangAvatar, setTrangAvatar] = useState<string>(DEFAULT_AVATARS.trang);
   const [huyAvatar, setHuyAvatar] = useState<string>(DEFAULT_AVATARS.huy);
   const [uploadingKey, setUploadingKey] = useState<"trang" | "huy" | null>(null);
+  const [heartBursts, setHeartBursts] = useState<HeartBurst[]>([]);
 
   const start = getAnniversaryDate();
   const today = new Date();
@@ -112,6 +120,22 @@ export default function HomePage({
   }, []);
 
   const startDateText = useMemo(() => new Date(DEFAULT_DATE).toLocaleDateString("vi-VN"), []);
+
+  const popHearts = () => {
+    const createdAt = Date.now();
+    const bursts = Array.from({ length: 7 }, (_, index) => ({
+      id: createdAt + index,
+      x: (index - 3) * 18 + Math.round(Math.random() * 10 - 5),
+      delay: index * 0.05,
+      scale: 0.8 + Math.random() * 0.6,
+    }));
+
+    setHeartBursts((current) => [...current, ...bursts]);
+
+    window.setTimeout(() => {
+      setHeartBursts((current) => current.filter((item) => !bursts.some((burst) => burst.id === item.id)));
+    }, 1400);
+  };
 
   const handleAvatarChange =
     (key: "trang" | "huy", setter: (value: string) => void) =>
@@ -180,7 +204,7 @@ export default function HomePage({
         lockedText="Nhập key để chỉnh sửa Home, Lịch và Wishlist"
       />
 
-      <h1 className="home-page-title dark solo">Mãi Bên Nhau</h1>
+      <h1 className="home-page-title dark solo">Mãi Bên Nhau Nhé ❤️</h1>
 
       <section className="love-hero dark">
         <div className="love-hero-overlay dark"></div>
@@ -214,7 +238,26 @@ export default function HomePage({
               </button>
             </div>
 
-            <div className="love-heart-badge">💗</div>
+            <button className="love-heart-badge interactive" type="button" onClick={popHearts} aria-label="Thả tim">
+              💗
+              <span className="heart-burst-layer" aria-hidden="true">
+                {heartBursts.map((heart) => (
+                  <span
+                    key={heart.id}
+                    className="burst-heart"
+                    style={
+                      {
+                        "--burst-x": `${heart.x}px`,
+                        "--burst-delay": `${heart.delay}s`,
+                        "--burst-scale": `${heart.scale}`,
+                      } as CSSProperties
+                    }
+                  >
+                    ❤️
+                  </span>
+                ))}
+              </span>
+            </button>
 
             <div className="love-avatar-block">
               <div className="love-avatar">

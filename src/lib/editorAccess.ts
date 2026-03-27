@@ -1,4 +1,4 @@
-export const EDIT_KEY = "tranginyeuhuy";
+export const EDIT_KEY = "huyyeutrangin";
 export const STORAGE_KEY = "wishlist-editor-unlocked";
 
 export const readEditorAccess = () => {

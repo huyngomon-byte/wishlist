@@ -155,7 +155,7 @@ export default function WishlistPage({
       <div className="header-card">
         <div className="rose">🌹</div>
         <div>
-          <h1 className="title">Wishlist của Trang</h1>
+          <h1 className="title">Wishlist của Bé Iu ❤️</h1>
           <p className="subtitle">Những món quà em thích, anh lưu hết ở đây 💖</p>
         </div>
       </div>
