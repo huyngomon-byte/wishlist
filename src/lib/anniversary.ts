@@ -15,6 +15,20 @@ export const getAnniversaryDate = () => new Date(DEFAULT_DATE);
 
 export const getAnniversaryValue = () => DEFAULT_DATE;
 
+export const createParsedMilestones = (items: CustomMilestone[], today = new Date()) =>
+  items
+    .map((item) => ({
+      ...item,
+      parsedDate: new Date(item.date),
+    }))
+    .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
+    .sort((first, second) => first.parsedDate.getTime() - second.parsedDate.getTime())
+    .map((item) => ({
+      ...item,
+      isPast: item.parsedDate < today,
+      daysAway: differenceInDays(today, item.parsedDate),
+    }));
+
 export const differenceInDays = (startDate: Date, endDate: Date) => {
   const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
   const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());

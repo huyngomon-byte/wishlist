@@ -95,10 +95,10 @@ export default function WishlistPage({
     }
 
     await addDoc(collection(db, "gifts"), {
-      name,
-      price,
-      note,
-      link,
+      name: name.trim(),
+      price: price.trim(),
+      note: note.trim(),
+      link: link.trim(),
       priority,
       bought: false,
       createdAt: serverTimestamp(),
@@ -198,12 +198,16 @@ export default function WishlistPage({
             <label className="label">₫ GIÁ ƯỚC TÍNH</label>
             <input
               className="input"
-              placeholder="Ví dụ: 500k, 1tr, 2.5tr hoặc 500000"
-              inputMode="numeric"
+              type="text"
+              inputMode="text"
+              autoCapitalize="off"
+              autoCorrect="off"
+              placeholder="Ví dụ: 200k, 500k, 1tr, 2.5tr hoặc 500000"
               value={price}
               onChange={(event) => setPrice(event.target.value)}
               disabled={!isEditor}
             />
+            <p className="field-hint">Có thể nhập 200k, 5tr, 2.5tr hoặc 500000 đều được.</p>
 
             <label className="label">🔗 LINK SẢN PHẨM</label>
             <input
@@ -254,7 +258,7 @@ export default function WishlistPage({
             />
 
             {isEditor ? (
-              <button className="submit-btn" type="button" onClick={addGift}>
+              <button className="submit-btn" type="button" onClick={() => void addGift()}>
                 Lưu món quà 💌
               </button>
             ) : (
@@ -272,10 +276,7 @@ export default function WishlistPage({
               <div className="empty-card">Chưa có món quà nào được thêm cả 💭</div>
             ) : (
               gifts.map((gift) => (
-                <div
-                  className={`gift-card ${gift.bought ? "gift-card-bought" : ""}`}
-                  key={gift.id}
-                >
+                <div className={`gift-card ${gift.bought ? "gift-card-bought" : ""}`} key={gift.id}>
                   <div className="gift-top">
                     <h3>{gift.name}</h3>
                     <span className="badge">{getPriorityText(gift.priority)}</span>
@@ -305,12 +306,12 @@ export default function WishlistPage({
                       <button
                         className={`bought-btn ${gift.bought ? "bought-btn-active" : ""}`}
                         type="button"
-                        onClick={() => toggleBought(gift.id, gift.bought)}
+                        onClick={() => void toggleBought(gift.id, gift.bought)}
                       >
                         {gift.bought ? "✅ Đã mua" : "🎁 Anh đã mua"}
                       </button>
 
-                      <button className="delete-btn" type="button" onClick={() => deleteGift(gift.id)}>
+                      <button className="delete-btn" type="button" onClick={() => void deleteGift(gift.id)}>
                         🗑 Xóa quà
                       </button>
                     </div>

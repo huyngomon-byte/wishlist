@@ -3,6 +3,7 @@ import CalendarPage from "./pages/CalendarPage";
 import HomePage from "./pages/HomePage";
 import WishlistPage from "./pages/WishlistPage";
 import { EDIT_KEY, persistEditorAccess, readEditorAccess } from "./lib/editorAccess";
+import { ensureCalendarStoreReady } from "./lib/calendarStore";
 
 type RouteKey = "home" | "calendar" | "wishlist";
 
@@ -32,18 +33,18 @@ const getRouteFromHash = (hash: string): RouteKey => {
 export default function App() {
   const [route, setRoute] = useState<RouteKey>(() => getRouteFromHash(window.location.hash));
   const [editKey, setEditKey] = useState("");
-  const [isEditor, setIsEditor] = useState(false);
-
-  useEffect(() => {
-    setIsEditor(readEditorAccess());
-
+  const [isEditor, setIsEditor] = useState(() => {
+    const hasSavedAccess = readEditorAccess();
     const params = new URLSearchParams(window.location.search);
     const keyFromUrl = params.get("key");
+
     if (keyFromUrl === EDIT_KEY) {
-      setIsEditor(true);
       persistEditorAccess(true);
+      return true;
     }
-  }, []);
+
+    return hasSavedAccess;
+  });
 
   useEffect(() => {
     if (!window.location.hash) {
@@ -57,6 +58,56 @@ export default function App() {
     window.addEventListener("hashchange", syncRoute);
 
     return () => window.removeEventListener("hashchange", syncRoute);
+  }, []);
+
+  useEffect(() => {
+    void ensureCalendarStoreReady();
+  }, []);
+
+  useEffect(() => {
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      ("standalone" in navigator && (navigator as Navigator & { standalone?: boolean }).standalone === true);
+
+    if (!isStandalone) return;
+
+    let hiddenAt = 0;
+
+    const maybeReload = () => {
+      if (document.visibilityState !== "visible" || hiddenAt === 0) return;
+
+      const now = Date.now();
+      const timeAway = now - hiddenAt;
+      const lastReloadAt = Number(sessionStorage.getItem("standalone-last-reload-at") || "0");
+
+      if (timeAway < 15000 || now - lastReloadAt < 15000) return;
+
+      sessionStorage.setItem("standalone-last-reload-at", `${now}`);
+      window.location.reload();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        hiddenAt = Date.now();
+        return;
+      }
+
+      maybeReload();
+    };
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        maybeReload();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
   }, []);
 
   const unlockEditor = () => {

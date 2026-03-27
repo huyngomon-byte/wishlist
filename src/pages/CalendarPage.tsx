@@ -2,11 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import EditorAccessCard from "../components/EditorAccessCard";
 import {
   DEFAULT_DATE,
-  differenceInDays,
+  createParsedMilestones,
   getAnniversaryDate,
-  readCustomMilestones,
-  saveCustomMilestones,
 } from "../lib/anniversary";
+import {
+  addMilestoneToStore,
+  ensureCalendarStoreReady,
+  removeMilestoneFromStore,
+  subscribeToMilestones,
+} from "../lib/calendarStore";
 import type { CustomMilestone } from "../lib/anniversary";
 
 type CalendarPageProps = {
@@ -30,35 +34,18 @@ export default function CalendarPage({
   const [note, setNote] = useState("");
 
   useEffect(() => {
-    setCustomMilestones(readCustomMilestones());
+    void ensureCalendarStoreReady();
+
+    const unsubscribe = subscribeToMilestones(setCustomMilestones);
+    return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    saveCustomMilestones(customMilestones);
-  }, [customMilestones]);
-
-  const today = new Date();
   const startDate = getAnniversaryDate();
-  const milestones = useMemo(
-    () =>
-      customMilestones
-        .map((item) => ({
-          ...item,
-          parsedDate: new Date(item.date),
-        }))
-        .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
-        .sort((first, second) => first.parsedDate.getTime() - second.parsedDate.getTime())
-        .map((item) => ({
-          ...item,
-          isPast: item.parsedDate < today,
-          daysAway: differenceInDays(today, item.parsedDate),
-        })),
-    [customMilestones, today],
-  );
+  const milestones = useMemo(() => createParsedMilestones(customMilestones, new Date()), [customMilestones]);
 
   const nextMilestone = milestones.find((item) => !item.isPast);
 
-  const addMilestone = () => {
+  const addMilestone = async () => {
     if (!isEditor) {
       window.alert("Cần mở quyền chỉnh sửa để thêm mốc nha");
       return;
@@ -74,26 +61,32 @@ export default function CalendarPage({
       return;
     }
 
-    const newItem: CustomMilestone = {
-      id: `${Date.now()}`,
-      title: title.trim(),
-      date,
-      note: note.trim(),
-    };
+    try {
+      await addMilestoneToStore({
+        title: title.trim(),
+        date,
+        note: note.trim(),
+      });
 
-    setCustomMilestones((current) => [...current, newItem]);
-    setTitle("");
-    setDate(DEFAULT_DATE);
-    setNote("");
+      setTitle("");
+      setDate(DEFAULT_DATE);
+      setNote("");
+    } catch {
+      window.alert("Lưu mốc chưa thành công, thử lại giúp mình nha");
+    }
   };
 
-  const removeMilestone = (id: string) => {
+  const removeMilestone = async (id: string) => {
     if (!isEditor) {
       window.alert("Cần mở quyền chỉnh sửa để xóa mốc nha");
       return;
     }
 
-    setCustomMilestones((current) => current.filter((item) => item.id !== id));
+    try {
+      await removeMilestoneFromStore(id);
+    } catch {
+      window.alert("Xóa mốc chưa thành công, thử lại giúp mình nha");
+    }
   };
 
   return (
@@ -157,7 +150,7 @@ export default function CalendarPage({
         />
 
         {isEditor ? (
-          <button className="submit-btn" type="button" onClick={addMilestone}>
+          <button className="submit-btn" type="button" onClick={() => void addMilestone()}>
             Lưu mốc mới 💌
           </button>
         ) : (
@@ -189,7 +182,7 @@ export default function CalendarPage({
                   {item.isPast ? "Lưu trong kỷ niệm" : `${item.daysAway} ngày nữa`}
                 </span>
                 {isEditor && (
-                  <button className="timeline-delete" type="button" onClick={() => removeMilestone(item.id)}>
+                  <button className="timeline-delete" type="button" onClick={() => void removeMilestone(item.id)}>
                     🗑 Xóa
                   </button>
                 )}

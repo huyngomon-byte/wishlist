@@ -658,6 +658,13 @@ button {
   color: rgba(255, 255, 255, 0.35);
 }
 
+.field-hint {
+  margin: -8px 0 18px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .textarea {
   min-height: 110px;
   resize: vertical;

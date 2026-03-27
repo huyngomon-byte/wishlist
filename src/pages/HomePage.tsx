@@ -4,10 +4,11 @@ import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import EditorAccessCard from "../components/EditorAccessCard";
 import {
   DEFAULT_DATE,
+  createParsedMilestones,
   differenceInDays,
   getAnniversaryDate,
-  readCustomMilestones,
 } from "../lib/anniversary";
+import { ensureCalendarStoreReady, subscribeToMilestones } from "../lib/calendarStore";
 import { db } from "../firebase/config";
 
 type HomePageProps = {
@@ -98,25 +99,26 @@ export default function HomePage({
   }, []);
 
   useEffect(() => {
-    const milestones = readCustomMilestones()
-      .map((item) => ({
-        ...item,
-        parsedDate: new Date(item.date),
-      }))
-      .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
-      .sort((first, second) => first.parsedDate.getTime() - second.parsedDate.getTime());
+    void ensureCalendarStoreReady();
 
-    setMilestoneCount(milestones.length);
+    const unsubscribe = subscribeToMilestones((items) => {
+      const now = new Date();
+      const milestones = createParsedMilestones(items, now);
 
-    const upcoming = milestones.find((item) => item.parsedDate >= today);
-    if (upcoming) {
-      setNextMilestoneText(`Còn ${differenceInDays(today, upcoming.parsedDate)} ngày`);
-      setNextMilestoneDate(upcoming.title);
-      return;
-    }
+      setMilestoneCount(milestones.length);
 
-    setNextMilestoneText("Chưa có mốc nào");
-    setNextMilestoneDate("Thêm mốc ở trang Lịch");
+      const upcoming = milestones.find((item) => !item.isPast);
+      if (upcoming) {
+        setNextMilestoneText(`Còn ${differenceInDays(now, upcoming.parsedDate)} ngày`);
+        setNextMilestoneDate(upcoming.title);
+        return;
+      }
+
+      setNextMilestoneText("Chưa có mốc nào");
+      setNextMilestoneDate("Thêm mốc ở trang Lịch");
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const startDateText = useMemo(() => new Date(DEFAULT_DATE).toLocaleDateString("vi-VN"), []);
