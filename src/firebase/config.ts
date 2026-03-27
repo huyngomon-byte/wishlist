@@ -7,7 +7,7 @@ const firebaseConfig = {
   projectId: "wishlist-15fa6",
   storageBucket: "wishlist-15fa6.firebasestorage.app",
   messagingSenderId: "24047356529",
-  appId: "1:24047356529:web:a6034403f0a3a70e94a9d0"
+  appId: "1:24047356529:web:a6034403f0a3a70e94a9d0",
 };
 
 const app = initializeApp(firebaseConfig);
